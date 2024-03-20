@@ -14,13 +14,17 @@ func main() {
 	input, _ := reader.ReadString('\n')
 	input = strings.TrimSpace(input)
 
+	if len(input) == 0 {
+		panic("необходимо ввести выражение")
+	}
+
 	fmt.Println("Введенное выражение:", input)
 
 	fmt.Println("Результат: ", calculate(input))
 
 	// Раскомментируйте строки ниже и закомментируйте строки выше, чтобы удобно тестировать :)
 
-	// inputs := []string{"1.5 / 1", "VI / III", "I - II", "I + 1", "1", "1 + 2 + 3"}
+	// inputs := []string{"1.5 / 1", "VI / III", "I - II", "I + 1", "1", "1 + 2 + 3", "1 + 5", "1 + 10", "10 * 10", "X * X", "X / X"}
 	// for _, v := range inputs {
 	// 	func() {
 	// 		defer func() {
@@ -60,7 +64,7 @@ func calculate(input string) string {
 	case "-":
 		if isRomanResult {
 			if a <= b {
-				panic("в римской системе нет отрицательных чисел")
+				panic("в римской системе нет отрицательных чисел и нуля")
 			}
 			return arabicToRoman(a - b)
 		}
@@ -82,7 +86,7 @@ func calculate(input string) string {
 		}
 		return strconv.Itoa(a / b)
 	default:
-		panic("некорректная операция")
+		panic("некорректный операнд")
 	}
 }
 
@@ -96,7 +100,7 @@ func parseNumber(s string) int {
 	} else {
 		number, err = strconv.Atoi(s)
 		if err != nil {
-			panic("некорректный формат числа")
+			panic("некорректный формат числа (калькулятор может работать только с целыми арабскими и римскими цифрами от 0 до 10 и от I до X)")
 		}
 	}
 
@@ -117,39 +121,40 @@ func isRoman(s string) bool {
 }
 
 func romanToArabic(s string) int {
-    romanValues := map[rune]int{
-        'I': 1,
-        'V': 5,
-        'X': 10,
-    }
+	romanValues := map[rune]int{
+		'I': 1,
+		'V': 5,
+		'X': 10,
+	}
 
-    var result int
-    var prevValue int
-    var temp int
+	var result int
+	var prevValue int
+	var temp int
 
-    for i := len(s) - 1; i >= 0; i-- {
-        curValue := romanValues[rune(s[i])]
+	for i := len(s) - 1; i >= 0; i-- {
+		curValue := romanValues[rune(s[i])]
 
-        if curValue >= prevValue {
-            temp += curValue
-        } else {
-            temp -= curValue
-        }
+		if curValue >= prevValue {
+			temp += curValue
+		} else {
+			temp -= curValue
+		}
 
-        if i == 0 || curValue <= romanValues[rune(s[i-1])] {
-            result += temp
-            temp = 0
-        }
+		if i == 0 || curValue <= romanValues[rune(s[i-1])] {
+			result += temp
+			temp = 0
+		}
 
-        prevValue = curValue
-    }
+		prevValue = curValue
+	}
 
-    if result < 1 || result > 10 {
-        panic("число должно быть от 1 до 10")
-    }
+	if result < 1 || result > 10 {
+		panic("число должно быть от 1 до 10")
+	}
 
-    return result
+	return result
 }
+
 type romanNumeral struct {
 	value  int
 	symbol string
