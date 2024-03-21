@@ -149,7 +149,7 @@ func romanToArabic(s string) int {
 	}
 
 	if result < 1 || result > 10 {
-		panic("число должно быть от 1 до 10")
+		panic("число должно быть от I до X")
 	}
 
 	return result
